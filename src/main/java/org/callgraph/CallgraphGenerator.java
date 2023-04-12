@@ -33,7 +33,8 @@ public class CallgraphGenerator {
                         .addInputLocation(pathBasedNamespace) // apk
                         .addInputLocation(
                                 new JavaClassPathAnalysisInputLocation(
-                                        "/usr/lib/jvm/java-17-openjdk-amd64/lib/jrt-fs.jar"))
+                                        "/usr/lib/jvm/java-17-openjdk-amd64/lib/jrt-fs.jar")
+                        )
                         .addInputLocation(
                                 new JavaClassPathAnalysisInputLocation("/home/emilio/Android/Sdk/platforms/android-21/android.jar") // change this
                         )
@@ -44,15 +45,20 @@ public class CallgraphGenerator {
         ViewTypeHierarchy typeHierarchy = new ViewTypeHierarchy(view);
         ///////////////////////////////////////////////////////////////////////////////////////
         //Defining an Entry Method
-        ClassType classTypeA = project.getIdentifierFactory().getClassType("com.amaze.filemanager.activities.MainActivity");
+        ClassType mainClass =
+                JavaIdentifierFactory.getInstance().getClassType("com.amaze.filemanager.activities.MainActivity");
+
+        ClassType classTypeA = project.getIdentifierFactory().getClassType("android.os.Bundle");
 
         MethodSignature entryMethodSignature =
                 JavaIdentifierFactory.getInstance()
                         .getMethodSignature(
-                                classTypeA,
+                                mainClass,
                                 JavaIdentifierFactory.getInstance()
                                         .getMethodSubSignature(
-                                                "onCreate() -> verificar", VoidType.getInstance(), Collections.singletonList(classTypeA)));
+                                                "onCreate", VoidType.getInstance(), Collections.singletonList(classTypeA)
+                                        )
+                        );
         ///////////////////////////////////////////////////////////////////////////////////////
         // Class Hierarchy Analysis
         CallGraphAlgorithm cha =
@@ -62,6 +68,8 @@ public class CallgraphGenerator {
                 cha.initialize(Collections.singletonList(entryMethodSignature));
 
         cg.callsFrom(entryMethodSignature).forEach(System.out::println);
+
+        System.out.println(cg.toStringSorted());
         ///////////////////////////////////////////////////////////////////////////////////////
 
     }
