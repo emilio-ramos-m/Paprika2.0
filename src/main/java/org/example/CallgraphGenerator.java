@@ -13,7 +13,7 @@ import soot.util.*;
 public class CallgraphGenerator {
     CallgraphGenerator(){
         String libPath = "libs/";
-        Scene.v().setSootClassPath(Scene.v().getSootClassPath() + File.pathSeparator + libPath);
+        //Scene.v().setSootClassPath(Scene.v().getSootClassPath() + File.pathSeparator + libPath);
 
         // Ruta al archivo APK de tu aplicación Android
         String apkPath = "../apk_validation/com.amaze.filemanager_29.apk";
@@ -23,12 +23,16 @@ public class CallgraphGenerator {
         Options.v().set_process_dir(Collections.singletonList(apkPath));
         Options.v().set_android_jars("../android-platforms/"); // Ruta a las bibliotecas de Android
 
+        Options.v().set_whole_program(true);
+        Options.v().set_allow_phantom_refs(true);
+
         // Cargar las clases y sus dependencias
         Scene.v().loadNecessaryClasses();
 
         // Habilitar la fase de análisis de CHA (Class Hierarchy Analysis)
         PhaseOptions.v().setPhaseOption("cg.cha", "on");
 
+        PackManager.v().runPacks();
         // Obtener el Call Graph
         CallGraph callGraph = Scene.v().getCallGraph();
 
