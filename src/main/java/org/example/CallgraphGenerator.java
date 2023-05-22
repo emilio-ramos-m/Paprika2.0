@@ -12,9 +12,6 @@ import soot.util.*;
 
 public class CallgraphGenerator {
     CallgraphGenerator(){
-        String libPath = "libs/";
-        //Scene.v().setSootClassPath(Scene.v().getSootClassPath() + File.pathSeparator + libPath);
-
         // Ruta al archivo APK de tu aplicación Android
         String apkPath = "../apk_validation/com.amaze.filemanager_29.apk";
 
